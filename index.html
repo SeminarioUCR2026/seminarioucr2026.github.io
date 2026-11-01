@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1232">
+<meta name="description" content="Dormir o rendir: una experiencia educativa sobre el sueño, los hábitos y la vida en residencias estudiantiles.">
+<title>Dormir o rendir | Sobrevive una semana en residencias</title>
+<link rel="icon" type="image/svg+xml" href="assets/img/icono.svg">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/book.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<div class="shell">
+<header class="topbar"><div class="logo" id="homeLogo" role="button" tabindex="0" aria-label="Volver al inicio"><span class="logo-bubble">☾</span><span>DORMIR <span style="color:var(--mint)">O RENDIR</span></span></div><div class="topright"><span class="toplabel">Proyecto educativo · UCR Grecia</span><button class="btn small ghost" id="topHome">⌂ Inicio</button></div></header>
+<main>
+<section id="home" class="screen active" aria-label="Inicio">
+ <div class="hero"><div class="hero-copy"><span class="eyebrow">☽ Una experiencia para aprender jugando</span><h1>¿Sobrevivirás <em>la semana?</em></h1><p class="lede">Son las 11:45 p. m. Tienes clases temprano, tareas pendientes y una residencia que nunca parece dormir. <strong>Tú decides qué hacer.</strong></p><div class="cta"><button class="btn primary" id="startBtn">🎮 Empezar el reto <span aria-hidden="true">→</span></button><button class="btn gold" id="pamBtn">📖 Abrir panfleto digital</button></div><p class="micro">⏱ 4–6 minutos · 7 decisiones · 🎧 Con música y sonidos ambientales<br>Las situaciones son ficticias y tienen fines educativos.</p></div>
+ <div class="visual residence-visual" aria-hidden="true"><figure class="residence-card"><img src="assets/img/residencia-principal.webp" alt="Residencias estudiantiles del Recinto de Grecia"><figcaption>Residencias estudiantiles · UCR Grecia</figcaption></figure><div class="float one">💤 Sueño: 72%</div><div class="float two">📚 Clase a las 7:00</div><div class="float three">🎵 ¿Otra fiesta?</div></div></div>
+ <div class="features"><div class="feature"><span>🎧</span><h3>Escucha lo que sucede</h3><p>Fiestas, risas, pasos, puertas y conversaciones te rodean mientras decides.</p></div><div class="feature"><span>🌙</span><h3>Decide cómo descansar</h3><p>Cada noche afecta tus indicadores simulados de descanso, energía y concentración.</p></div><div class="feature"><span>📖</span><h3>Conoce la investigación</h3><p>Entra al panfleto para explorar la pregunta, el método y las recomendaciones.</p></div></div>
+</section>
+<section id="register" class="screen" aria-label="Ingresar al minijuego">
+  <div class="player-entry">
+    <div class="entry-icon">🎮</div>
+    <span class="eyebrow">ANTES DE EMPEZAR</span>
+    <h1>¿Quién sobrevivirá esta semana?</h1>
+    <p>Escribe tu nombre o un apodo. Tus decisiones afectarán el descanso, la energía y la concentración. Para ganar, deberás conservar los tres indicadores en <strong>70% o más</strong> y evitar acumular demasiada deuda de sueño.</p>
+    <form id="playerForm" autocomplete="off">
+      <label class="player-label" for="playerName">Nombre o apodo</label>
+      <input id="playerName" name="playerName" type="text" maxlength="32" minlength="2" placeholder="Escribe tu nombre o apodo" required autocomplete="nickname">
+      <label class="consent-line"><input id="resultsConsent" type="checkbox" required> <span>Acepto que al terminar se intente enviar <strong>mi nombre o apodo, duración y resultados del juego</strong> al Discord del proyecto. Puedo usar un apodo. La entrega no se puede confirmar desde esta página.</span></label>
+      <p id="entryError" class="form-error hidden" role="alert"></p>
+      <button class="btn primary begin-btn" type="submit">Comenzar mis 7 días →</button>
+    </form>
+    <button class="btn ghost small" id="registerBack" type="button">← Volver al inicio</button>
+  </div>
+</section>
+<section id="game" class="screen" aria-label="Minijuego">
+ <div id="game-in-progress"><div class="game-heading"><div><span class="eyebrow">🎮 Modo historia interactiva</span><h1>Sobrevive la semana</h1><p>Cada día tiene un costo. ¡Busca el equilibrio para ganar!</p></div><button class="btn small ghost" id="restartBtn">↻ Reiniciar</button></div>
+
+ <div class="mobile-hud" aria-label="Progreso y estado actual" role="group">
+   <div class="mobile-hud-heading"><span>🎮 TU SEMANA</span><strong id="mobileDayLabel">Lunes · 1 de 7</strong></div>
+   <div class="mobile-hud-stats">
+     <div class="mobile-stat"><span>🌙 Descanso</span><strong id="mobileSleepValue">64%</strong></div>
+     <div class="mobile-stat"><span>⚡ Energía</span><strong id="mobileEnergyValue">65%</strong></div>
+     <div class="mobile-stat"><span>📚 Concentración</span><strong id="mobileFocusValue">69%</strong></div>
+   </div>
+   <div id="mobileDayDots" class="daydots mobile-dots" aria-label="Progreso de siete días"></div>
+ </div>
+ <div class="game-layout"><article class="scene"><div class="scene-art" id="sceneArt"><img class="scene-image hidden" id="sceneImage" alt="" decoding="async"><div class="stars">✦ · ✧ ·</div><div class="wall-window" id="wallWindow"></div><div class="bed"></div><div class="icon-scene" id="sceneIcon">💤</div></div><div class="scene-main"><div class="day-tag" id="dayLabel">DÍA 1 DE 7 · LUNES</div><h2 id="dayTitle">Una semana por delante</h2><p id="dayCopy" class="scene-copy"></p><div class="sound-tag"><div class="wave" id="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><span id="soundDescription">Ambiente tranquilo</span></div><div class="sound-events" id="soundEvents" aria-live="polite">🎧 La habitación empieza a cobrar vida...</div><div id="choices" class="choices"></div><div id="feedback" class="feedback" aria-live="polite"><h3 id="feedbackTitle"></h3><p id="feedbackText"></p><button class="btn primary" id="nextBtn">Continuar →</button></div></div></article>
+ <aside class="sidebar"><div class="sidecard"><h3>💫 Tu estado esta semana</h3><div class="bar-label"><span>🌙 Descanso</span><strong id="sleepValue">64</strong></div><div class="meter"><div id="sleepBar"></div></div><div class="bar-label"><span>⚡ Energía</span><strong id="energyValue">65</strong></div><div class="meter energy"><div id="energyBar"></div></div><div class="bar-label"><span>📚 Concentración</span><strong id="focusValue">69</strong></div><div class="meter focus"><div id="focusBar"></div></div><div class="sound-help">Reto: termina con los tres valores en 70% o más y una deuda de sueño de máximo 3. Son puntos del juego, no mediciones clínicas.</div></div><div class="sidecard"><h3>📅 Tu recorrido</h3><div class="daydots" id="dayDots" aria-label="Progreso de siete días"></div><p class="sound-help" style="margin-bottom:0">Avanza del lunes al domingo y descubre tu desenlace.</p></div></aside></div></div>
+ <div class="outcome hidden" id="game-over" aria-live="polite"><div class="big" id="endingIcon">🌙</div><span class="eyebrow">SEMANA COMPLETADA</span><h2 id="endingTitle"></h2><p id="endingDescription"></p><div class="result-pills" id="resultPills"></div>
+    <div class="final-info"><span>👤 <strong id="resultName"></strong></span><span>⏱ Tiempo para completar: <strong id="resultDuration">—</strong></span><span>💤 Deuda de sueño: <strong id="resultDebt">0</strong></span></div>
+    <div class="send-status" id="sendStatus" role="status" aria-live="polite">Preparando el resultado…</div>
+    <div class="result-actions"><button class="btn small ghost hidden" type="button" id="retrySendBtn">↻ Reintentar envío</button><button class="btn small ghost" type="button" id="copyResultBtn">📋 Copiar resultado</button></div><p><strong>Idea principal:</strong> El ruido, la organización del tiempo y las rutinas pueden afectar la oportunidad de descansar. La vida real es más compleja que estos indicadores del juego.</p><div class="cta" style="justify-content:center"><button class="btn primary" id="replayBtn">↻ Volver a jugar</button><button class="btn gold" id="endPamBtn">📖 Ver panfleto</button></div></div>
+</section>
+<section id="pamphlet" class="screen" aria-label="Libro digital sobre sueño y rendimiento académico">
+  <div class="book-intro">
+    <span class="book-kicker">✦ PRODUCTO CREATIVO · UCR GRECIA</span>
+    <h1>Libro digital <em>basado en imágenes</em></h1>
+    <p>Primero verás solo la portada. Tócala para abrir el libro. Después podrás pasar las hojas con un movimiento de libro en 3D.</p>
+    <div class="pam-actions">
+      <button class="btn primary" id="pamGameBtn">🎮 Ir al minijuego</button>
+      <button class="btn ghost" id="printBtn">⤓ Guardar libro como PDF</button>
+      <button class="btn ghost" id="pamHomeBtn">⌂ Inicio</button>
+    </div>
+  </div>
+  <div class="book-meta"><span id="bookChapter">PORTADA</span><span id="bookCount" aria-live="polite">Toca para abrir</span></div>
+  <div class="book-gallery" id="bookScene">
+    <div class="book-cover-stand" id="closedBook">
+      <button class="book-open-hitbox" id="bookOpenButton" type="button" aria-label="Abrir el libro: toca la portada">
+        <img id="closedBookImage" class="book-cover-image" src="" alt="Portada del libro">
+        <span class="book-open-prompt">📖 Toca la portada para abrir</span>
+      </button>
+    </div>
+
+    <div class="book-viewer hidden" id="flipbookStage">
+      <button class="viewer-side prev-side" id="bookPrev" type="button" aria-label="Página anterior">❮</button>
+      <div class="viewer-window" id="bookFrame">
+        <div class="viewer-track" id="bookSpread"></div>
+      </div>
+      <button class="viewer-side next-side" id="bookNext" type="button" aria-label="Página siguiente">❯</button>
+    </div>
+  </div>
+  <div class="book-controls is-hidden" id="bookControls" aria-label="Navegación del libro">
+    <button class="book-nav" id="bookClose" type="button">✕ Cerrar libro</button>
+    <div class="book-progress" id="bookProgress" aria-label="Progreso de lectura"></div>
+  </div>
+  <p class="book-instruction is-hidden" id="bookInstruction">👆 Desliza el dedo o usa las flechas para pasar las hojas.</p>
+  <div class="research-note">📚 <strong>Sobre el libro:</strong> El panfleto acompaña al minijuego y reúne el material gráfico de la investigación.</div>
+  <div class="book-print-gallery" id="bookPrintGallery" aria-hidden="true"></div>
+</section>
+</main>
+<footer class="foot">Producto creativo académico · Seminario de Realidad Nacional I · UCR, Recinto de Grecia. Elaborado como experiencia educativa, no como evaluación clínica. <span style="display:block;margin-top:5px">🎧 Grabaciones ambientales de acceso abierto; créditos en la carpeta docs. Las situaciones del juego son ficticias.</span></footer>
+</div>
+<audio id="ambienceAudio" preload="auto" loop playsinline></audio>
+<audio id="partyMusicAudio" preload="none" loop playsinline></audio>
+<!-- El libro y las imágenes son locales. Los sonidos reales necesitan Internet hasta instalar los archivos con la guía de audio. -->
+<script src="js/data/scenes.js"></script>
+<script src="js/data/audio-files.js"></script>
+<script src="js/data/book-pages.js"></script>
+<script src="js/data/discord-config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/discord.js"></script>
+<script src="js/game.js"></script>
+<script src="js/book.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
