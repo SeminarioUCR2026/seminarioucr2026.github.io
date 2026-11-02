@@ -26,3 +26,7 @@ Los sonidos actuales vienen de Wikimedia Commons y requieren Internet. Los naveg
 ## Actualizar el informe después
 
 Edita el informe en Canva, descarga el PDF y sustituye `assets/docs/noches-en-residencia.pdf`. Para actualizar también las páginas del libro 3D, vuelve a exportar imágenes por página y reemplaza los archivos `pagina-XX.webp` manteniendo el orden de `js/data/book-pages.js`.
+
+
+### Navegación del informe — giro suave de una hoja
+El informe muestra una sola página a la vez en PC, Android y iPhone. Al avanzar o retroceder, la hoja se inclina ligeramente con perspectiva y sombra, sin dar una vuelta de 180 grados. Se mantienen las 18 páginas y el PDF original.

@@ -1,47 +1,37 @@
-/* Libro por imágenes. Todas las páginas y su orden se configuran en js/data/book-pages.js.
-   Se usa un giro 3D real de la hoja, con anverso y reverso, sin librerías externas. */
+/* Libro por imágenes en modo hoja por hoja.
+   La portada se abre aparte y luego se muestra una página por vez,
+   con una transición suave para evitar el giro forzado de dos hojas. */
 let bookPosition = 1; // la portada ocupa el índice 0
 let bookOpened = false;
 let bookTurning = false;
-let bookWasMobile = bookIsMobile();
 let touchStart = null;
 let lastSwipe = 0;
 let bookTransitionTimer = null;
 
-const BOOK_TURN_TIME = 950;
-const BOOK_OPEN_TIME = 750;
+const BOOK_TURN_TIME = 640;
+const BOOK_OPEN_TIME = 560;
 const reducedBookMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function bookIsMobile() { return window.matchMedia('(max-width: 799px)').matches; }
 function totalInteriorPages() { return Math.max(0, bookPages.length - 1); }
-function visiblePerView() { return bookIsMobile() ? 1 : 2; }
-function maxBookPosition() {
-  const total = totalInteriorPages();
-  if (total <= 1) return 1;
-  return bookIsMobile() ? total : (total % 2 === 0 ? total - 1 : total);
-}
+function maxBookPosition() { return Math.max(1, totalInteriorPages()); }
 function clampBookPosition(pos) { return Math.min(Math.max(1, pos), maxBookPosition()); }
 function interiorPage(n) { return bookPages[n] || null; }
 function pageCard(page) {
   if (!page) return '<div class="image-page placeholder-page" aria-hidden="true"></div>';
   return `<figure class="image-page"><img src="${page.src}" alt="${page.name}" draggable="false"></figure>`;
 }
-function setSpread(left, right) {
-  $('bookSpread').innerHTML = pageCard(left) + (!bookIsMobile() ? pageCard(right) : '');
+function setPage(page) {
+  $('bookSpread').innerHTML = pageCard(page);
 }
 function setProgress() {
-  const perView = visiblePerView();
-  const ending = Math.min(bookPosition + perView - 1, totalInteriorPages());
   const first = interiorPage(bookPosition);
   $('bookChapter').textContent = first ? first.name.toUpperCase() : 'LIBRO';
-  $('bookCount').textContent = perView === 1
-    ? `Página ${bookPosition + 1} de ${bookPages.length}`
-    : `Páginas ${bookPosition + 1}${ending > bookPosition ? '–' + (ending + 1) : ''} de ${bookPages.length}`;
+  $('bookCount').textContent = `Página ${bookPosition + 1} de ${bookPages.length}`;
   $('bookPrev').disabled = false;
-  $('bookNext').disabled = ending >= totalInteriorPages();
+  $('bookNext').disabled = bookPosition >= totalInteriorPages();
   $('bookProgress').innerHTML = Array.from({ length: totalInteriorPages() }, (_, i) => {
     const n = i + 1;
-    return `<b class="${n >= bookPosition && n <= ending ? 'current' : ''}" title="Página ${n}"></b>`;
+    return `<b class="${n === bookPosition ? 'current' : ''}" title="Página ${n + 1}"></b>`;
   }).join('');
 }
 function renderBook() {
@@ -56,13 +46,13 @@ function renderBook() {
     return;
   }
   bookPosition = clampBookPosition(bookPosition);
-  setSpread(interiorPage(bookPosition), interiorPage(bookPosition + 1));
+  setPage(interiorPage(bookPosition));
   setProgress();
 }
-function cleanTurn() {
-  const sheet = $('bookFrame').querySelector('.turn-sheet');
-  if (sheet) sheet.remove();
-  $('bookFrame').classList.remove('is-turning');
+function clearTransition() {
+  const overlay = $('bookFrame').querySelector('.single-page-turn');
+  if (overlay) overlay.remove();
+  $('bookFrame').classList.remove('is-animating');
   bookTurning = false;
   if (bookTransitionTimer) clearTimeout(bookTransitionTimer);
   bookTransitionTimer = null;
@@ -100,87 +90,54 @@ function closeBook() {
     bookTurning = false;
     bookTransitionTimer = null;
     renderBook();
-  }, reducedBookMotion() ? 40 : 520);
+  }, reducedBookMotion() ? 40 : 420);
 }
-function makeTurnFace(page, side) {
-  const el = document.createElement('div');
-  el.className = `turn-face ${side}`;
-  if (page) {
-    const img = document.createElement('img');
-    img.src = page.src;
-    img.alt = '';
-    img.draggable = false;
-    el.appendChild(img);
-  } else {
-    el.classList.add('blank-face');
+// Se ve una sola página. La hoja actual se inclina ligeramente en 3D y
+// descubre la siguiente por debajo: movimiento suave sin giros de 180 grados.
+function animatePageChange(currentPage, nextPage, dir) {
+  const frame = $('bookFrame');
+  const overlay = document.createElement('div');
+  overlay.className = `single-page-turn ${dir > 0 ? 'forward' : 'backward'}`;
+
+  const paper = document.createElement('figure');
+  paper.className = 'single-page-paper';
+  const image = document.createElement('img');
+  image.src = currentPage.src;
+  image.alt = '';
+  image.draggable = false;
+  paper.appendChild(image);
+  overlay.appendChild(paper);
+
+  // La siguiente hoja queda debajo; no se duplica ni se abre otra al lado.
+  setPage(nextPage);
+  frame.classList.add('is-animating');
+  frame.appendChild(overlay);
+  if (!reducedBookMotion()) {
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
   }
-  return el;
 }
 function turnBook(dir) {
   if (bookTurning || !$('pamphlet').classList.contains('active')) return;
   if (!bookOpened) { if (dir > 0) openBook(); return; }
-  const per = visiblePerView();
-  const next = bookPosition + per * (dir > 0 ? 1 : -1);
+  const next = bookPosition + (dir > 0 ? 1 : -1);
   if (next < 1) { closeBook(); return; }
   if (next > maxBookPosition()) return;
-  const current = bookPosition;
-  const mobile = bookIsMobile();
-  const frame = $('bookFrame');
-  const rect = frame.getBoundingClientRect();
-  const pageElement = $('bookSpread').querySelector(mobile ? '.image-page:first-child' : dir > 0 ? '.image-page:nth-child(2)' : '.image-page:first-child');
-  if (!pageElement) return;
-  const pageRect = pageElement.getBoundingClientRect();
-  const sheet = document.createElement('div');
-  sheet.className = `turn-sheet ${dir > 0 ? 'turn-forward' : 'turn-backward'}`;
-  sheet.style.top = `${pageRect.top - rect.top}px`;
-  sheet.style.left = `${pageRect.left - rect.left}px`;
-  sheet.style.width = `${pageRect.width}px`;
-  sheet.style.height = `${pageRect.height}px`;
-
-  let front, back, underLeft, underRight;
-  if (mobile) {
-    front = interiorPage(current);
-    back = interiorPage(next);
-    underLeft = interiorPage(next);
-    underRight = null;
-  } else if (dir > 0) {
-    front = interiorPage(current + 1);    // hoja derecha que se levanta
-    back = interiorPage(next);             // reverso de esa hoja
-    underLeft = interiorPage(current);     // visible a la izquierda hasta finalizar
-    underRight = interiorPage(next + 1);  // página que queda bajo la hoja
-  } else {
-    front = interiorPage(current);        // hoja izquierda que regresa
-    back = interiorPage(next + 1);       // reverso que reaparece a la derecha
-    underLeft = interiorPage(next);
-    underRight = interiorPage(current + 1);
-  }
-  sheet.append(makeTurnFace(front, 'front'), makeTurnFace(back, 'back'));
+  const currentPage = interiorPage(bookPosition);
+  const nextPage = interiorPage(next);
+  if (!currentPage || !nextPage) return;
   bookTurning = true;
-  frame.classList.add('is-turning');
-  setSpread(underLeft, underRight);
-  frame.appendChild(sheet);
-  if (reducedBookMotion()) {
-    bookPosition = next;
-    cleanTurn();
-    renderBook();
-    return;
-  }
-  // Reiniciar la animación al pasar páginas rápidamente.
-  void sheet.offsetWidth;
-  sheet.classList.add('animate-turn');
+  animatePageChange(currentPage, nextPage, dir);
   const finish = () => {
-    if (!bookTurning || !sheet.isConnected) return;
     bookPosition = next;
-    cleanTurn();
+    clearTransition();
     renderBook();
   };
-  sheet.addEventListener('animationend', finish, { once: true });
-  // Respaldo si un navegador suspende el evento de animación.
-  bookTransitionTimer = setTimeout(finish, BOOK_TURN_TIME + 180);
+  bookTransitionTimer = setTimeout(finish, reducedBookMotion() ? 30 : BOOK_TURN_TIME);
 }
 function resetBook() {
   if (bookTransitionTimer) clearTimeout(bookTransitionTimer);
-  cleanTurn();
+  clearTransition();
   bookOpened = false;
   bookPosition = 1;
   $('bookScene').classList.remove('is-opening', 'is-closing');
@@ -219,21 +176,14 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && bookOpened) { e.preventDefault(); closeBook(); }
 });
 window.addEventListener('resize', () => {
-  const mobile = bookIsMobile();
-  if (mobile !== bookWasMobile) {
-    bookWasMobile = mobile;
-    if (bookTransitionTimer) clearTimeout(bookTransitionTimer);
-    cleanTurn();
-    $('bookScene').classList.remove('is-opening', 'is-closing');
-    if (bookOpened) {
-      $('closedBook').classList.add('hidden');
-      $('flipbookStage').classList.remove('hidden');
-      $('bookControls').classList.remove('is-hidden');
-      $('bookInstruction').classList.remove('is-hidden');
-      if (!mobile && bookPosition % 2 === 0) bookPosition--;
-    }
-    renderBook();
+  if (bookTurning) clearTransition();
+  if (bookOpened) {
+    $('closedBook').classList.add('hidden');
+    $('flipbookStage').classList.remove('hidden');
+    $('bookControls').classList.remove('is-hidden');
+    $('bookInstruction').classList.remove('is-hidden');
   }
+  renderBook();
 });
 $('pamBtn').addEventListener('click', resetBook);
 $('endPamBtn').addEventListener('click', resetBook);
