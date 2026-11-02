@@ -20,12 +20,9 @@
 .player-entry form{display:grid;gap:14px;margin:20px 0 16px}
 .player-label{font-weight:850;color:#f8faff}
 #playerName{width:100%;min-width:0;border:1px solid #8091c7;border-radius:14px;padding:15px 16px;font-size:1rem;background:#ffffffed;color:#172544;min-height:52px}
-.consent-line{display:flex;align-items:flex-start;gap:12px;border:1px solid rgba(123,241,215,.32);border-radius:15px;padding:14px;background:#ffffff0e;color:#e1e8fa;font-size:.88rem;line-height:1.5;cursor:pointer}
-.consent-line input{width:20px;height:20px;flex-shrink:0;margin-top:3px;accent-color:#7bf1d7}
 .begin-btn{width:100%}
 .form-error{color:#ffbfbc!important;margin:0!important;font-size:.82rem!important}
 .final-info{display:flex;flex-direction:column;align-items:center;gap:9px;margin:15px 0;color:#e3eafd;font-size:.9rem}
-.send-status{border:1px solid #ffffff30;background:#ffffff0b;border-radius:15px;margin:18px auto;max-width:570px;padding:13px 15px;color:#e1eeef;line-height:1.55;font-size:.86rem}
 .result-actions{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin:15px 0}
 @media(max-width:570px){.player-entry{margin-top:12px;border-radius:19px}.final-info{font-size:.84rem}}
 

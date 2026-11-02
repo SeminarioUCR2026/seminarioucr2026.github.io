@@ -123,7 +123,6 @@ function finish(){
   $('resultName').textContent=playerName;
   $('resultDuration').textContent=formatDuration(durationSeconds);
   $('resultDebt').textContent=String(sleepDebt);
-  $('retrySendBtn').classList.add('hidden');
   submitDiscordReport(finalReport);
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -132,6 +131,5 @@ function start(name){
   resetReportSending();
   dayIndex=0;stats={...INITIAL_STATS};sleepDebt=0;
   currentDecisionTrace=[];finalReport=null;finishedAt=0;startedAt=performance.now();
-  $('sendStatus').textContent='Preparando los resultados…';
   show('game');renderDay();
 }

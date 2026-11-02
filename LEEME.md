@@ -21,3 +21,7 @@ Sube **el contenido dentro de este ZIP a la raíz del repositorio**: index.html,
 El PDF debe mantenerse tal cual se exporta de Canva para impresión, mientras que las imágenes webp sirven como vista de lectura, no sustituyen el PDF.
 
 **Privacidad:** el webhook de Discord de la versión anterior permanece en código del navegador y por eso puede quedar expuesto en GitHub público. Para compartir la página ampliamente, es recomendable usar un intermediario seguro y rotar la URL.
+
+## Discord sin controles de prueba
+No hay botón de prueba, casilla de autorización ni mensajes de prueba. Al finalizar los siete días, el juego intenta enviar los resultados automáticamente a Discord. El navegador no puede confirmar la recepción mediante `no-cors`.
+Si GitHub sigue mostrando la versión anterior, subí de nuevo todos los archivos de este ZIP y recargá la web con Ctrl+F5.

@@ -13,7 +13,6 @@ function resetReportSending(){
   reportSent=false;
   $('copyResultBtn').textContent='📋 Copiar resultado';
 }
-function reportMessage(message){ $('sendStatus').textContent=message; }
 function discordPayload(r){
   const cleanName=String(r.name||'Anónimo').replace(/[\x00-\x1F\x7F]/g,' ').replace(/@/g,'＠').slice(0,32);
   const status=r.won?'🏆 Superó la semana':'🌧️ No superó la semana';
@@ -67,8 +66,6 @@ async function sendDirectDiscord(payload,signal){
 async function submitDiscordReport(report){
   if(!report||sendingReport||reportSent)return;
   sendingReport=true;
-  $('retrySendBtn').classList.add('hidden');
-  reportMessage('📤 Intentando enviar el resultado a Discord…');
   const controller=new AbortController();activeSendController=controller;
   const sequence=++sendSequence;
   const timeout=setTimeout(()=>controller.abort(),20000);
@@ -76,11 +73,9 @@ async function submitDiscordReport(report){
     await sendDirectDiscord(discordPayload(report),controller.signal);
     if(sequence!==sendSequence)return;
     reportSent=true;
-    reportMessage('📨 Solicitud enviada desde el navegador. Revisa el canal PRUEBA de Discord: el navegador NO permite confirmar si Discord la guardó.');
   }catch(error){
     if(sequence===sendSequence){
-      reportMessage('❌ No se pudo iniciar el envío: '+(error.name==='AbortError'?'Tiempo de espera agotado.':String(error.message).slice(0,200)));
-      $('retrySendBtn').classList.remove('hidden');
+      console.warn('No se pudo iniciar el envío automático del resultado.',error);
     }
   }finally{
     clearTimeout(timeout);
@@ -97,5 +92,4 @@ function copyFinalReport(){
 function manualCopy(text){
   const area=document.createElement('textarea');area.value=text;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();$('copyResultBtn').textContent='✓ Resultado copiado';
 }
-$('retrySendBtn').addEventListener('click',()=>submitDiscordReport(finalReport));
 $('copyResultBtn').addEventListener('click',copyFinalReport);

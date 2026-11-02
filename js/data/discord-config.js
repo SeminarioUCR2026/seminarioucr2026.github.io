@@ -1,4 +1,4 @@
-// Solo para pruebas: este webhook sera PUBLICO en GitHub Pages.
+// Advertencia: este webhook es PUBLICO en GitHub Pages.
 // Discord podria revocarlo si se publica. Sustituyelo cuando sea necesario.
 window.DISCORD_RESULTS_CONFIG = {
   mode: "github-pages-direct",
