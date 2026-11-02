@@ -4,7 +4,7 @@ let dayIndex=0,stats={sleep:70,energy:70,focus:70},muted=false,playingSound=null
 let fxTimers=[],fxInstances=[],soundRunToken=0,sceneLoopTimer=null;
 const audio=$('ambienceAudio');
 const partyMusicAudio=$('partyMusicAudio');
-function baseVolume(){return 0.34;} // Volumen fijo: controles de audio eliminados
+function baseVolume(){return 1.0;} // Máximo nivel del reproductor HTML; controla la salida desde las bocinas.
 function show(screen){
   for(const el of document.querySelectorAll('.screen'))el.classList.toggle('active',el.id===screen);
   window.scrollTo({top:0,behavior:'instant'});
@@ -24,8 +24,8 @@ function stopSound(){
 function applySoundVolume(){
   const base=muted?0:baseVolume();
   audio.volume=base*(quieted?.18:1);
-  partyMusicAudio.volume=Math.min(1,base*.52*(quieted?.18:1));
-  for(const obj of fxInstances){obj.element.volume=Math.min(1,base*obj.level*(quieted?.22:1));}
+  partyMusicAudio.volume=Math.min(1,base*.95*(quieted?.18:1));
+  for(const obj of fxInstances){obj.element.volume=Math.min(1,base*Math.max(.86,obj.level)*(quieted?.22:1));}
   $('wave').classList.toggle('active',!!playingSound&&!muted);
 }
 function notifySound(message){
@@ -46,7 +46,7 @@ function playEffect(id,label,level=1){
   if(muted||!media[id])return;
   const one=new Audio(media[id]);one.preload='auto';one.playsInline=true;
   const entry={element:one,level};fxInstances.push(entry);
-  one.volume=Math.min(1,baseVolume()*level*(quieted?.22:1));
+  one.volume=Math.min(1,baseVolume()*Math.max(.86,level)*(quieted?.22:1));
   one.addEventListener('ended',()=>{const i=fxInstances.indexOf(entry);if(i>=0)fxInstances.splice(i,1);one.removeAttribute('src');},{once:true});
   one.play().catch(()=>notifySound('⚠️ Grabación no disponible: revisa tu conexión.'));
 }

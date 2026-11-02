@@ -1,41 +1,11 @@
-GUÍA RÁPIDA DE EDICIÓN
+LIBRO DIGITAL · NOCHES EN RESIDENCIA
 
-1) Para cambiar las páginas del libro:
-   - Entra a assets/img/book/
-   - Reemplaza las imágenes cover.jpg, page-2.jpg, page-3.jpg, etc.
-   - Si agregas o quitas páginas, edita js/data/book-pages.js
+- PDF descargable original: assets/docs/noches-en-residencia.pdf
+- Páginas ilustradas: assets/img/book/pagina-01.webp ... pagina-18.webp
+- Orden del libro: js/data/book-pages.js
+- Lógica de giro 3D: js/book.js
+- Diseño móvil: css/book.css, css/responsive.css
+- Sonido fuerte sin controles: js/audio.js (máximo del navegador)
+- Envío de resultados: js/discord.js, js/data/discord-config.js
 
-2) Para cambiar el orden del libro:
-   - Abre js/data/book-pages.js
-   - Cambia el orden de los objetos o añade nuevos.
-
-3) Para editar el juego:
-   - Abre js/data/scenes.js
-
-4) Para cambiar estilos:
-   - Libro: css/book.css
-   - Juego: css/game.css
-   - Base general: css/base.css
-
-EFECTO DE LIBRO
-- css/book.css contiene el diseño y la animación 3D de las hojas.
-- js/book.js controla el avance y retroceso de las páginas.
-- Para alterar la duración, cambia BOOK_TURN_TIME (JS) y .95s (CSS).
-
-
-Imagen principal de la portada: `assets/img/residencia-principal.webp`
-
-IMÁGENES DE LOS DÍAS
-assets/img/scenes/lunes-noche.webp = primer día
-assets/img/scenes/jueves-fiesta.webp = jueves, fiesta
-Para usar imágenes en otros días: js/data/scenes.js (propiedad image de cada día).
-
-
-Imágenes de escenas del juego:
-- assets/img/scenes/lunes-noche.webp
-- assets/img/scenes/martes-pasillo.webp
-- assets/img/scenes/miercoles-examen.webp
-- assets/img/scenes/jueves-fiesta.webp
-- assets/img/scenes/viernes-manana.webp
-- assets/img/scenes/sabado-organizacion.webp
-- assets/img/scenes/domingo-planificacion.webp
+Para cambiar contenidos, actualiza tanto el PDF como las imágenes de cada página.
