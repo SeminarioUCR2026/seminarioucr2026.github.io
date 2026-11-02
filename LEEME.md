@@ -1,32 +1,23 @@
-# Noches en residencia · UCR Grecia
+# Dormir o Rendir · Semana Ambiental 2026
 
-Web responsive (GitHub Pages) con el minijuego **Sobrevive la semana** y el informe completo de Canva, **18 páginas**.
+Sitio estático listo para GitHub Pages, con minijuego y el **tríptico original de Semana Ambiental**.
 
-## Contenido
+## Lo nuevo
+- Brochure con seis paneles en orden de lectura y giro sutil, cómodo en teléfonos y PC.
+- Se pueden desplegar las dos caras originales completas desde el mismo visor.
+- El botón **Descargar tríptico PDF** descarga `assets/docs/Brochure_Semana_Ambiental_2026.pdf`, copia intacta del PDF entregado, en dos páginas A4 apaisadas (tres paneles por cara).
+- Se mantienen el minijuego de siete días, el sonido y el envío automático a Discord de la versión previa.
 
-- `index.html`: web completa, lista para publicar con GitHub Pages.
-- `assets/docs/noches-en-residencia.pdf`: PDF original de Canva, que se descarga directamente al pulsar el botón.
-- `assets/img/book/pagina-01.webp` a `pagina-18.webp`: las 18 páginas reales del informe en el libro 3D.
-- `js/data/book-pages.js`: nombres y orden de páginas.
-- `js/audio.js`: sonidos a volumen 100 % del navegador, sin controles de sonido visibles. La potencia final depende de las bocinas del aula; ajusta el volumen del equipo y prueba antes de presentar.
-- `js/discord.js`: envío automático de resultados al finalizar el juego. No hay casilla de consentimiento: se mantiene un aviso claro de que el apodo y resultados se envían.
+## Subir a GitHub Pages
+Sube **el contenido dentro de este ZIP a la raíz del repositorio**: index.html, css, js, assets, docs, y archivos ocultos. No coloques toda la carpeta dentro de otra carpeta. En Settings → Pages elige Deploy from branch → main → /(root).
 
-## Actualizar GitHub Pages
+## Editar brochure
+- PDF descargable: `assets/docs/Brochure_Semana_Ambiental_2026.pdf`.
+- Paneles: `assets/img/brochure/portada.webp`, `solapa.webp`, `interior-izquierdo.webp`, `interior-centro.webp`, `interior-derecho.webp`, `contraportada.webp`.
+- Dos caras: `cara-exterior.webp`, `cara-interior.webp`.
+- Orden y títulos: `js/data/book-pages.js`.
+- Animación: `js/book.js`, `css/book.css`.
 
-En tu repositorio, sustituye los archivos de la web por los del ZIP (mantén el árbol de carpetas). En Settings > Pages, publica desde `main` y `/(root)`.
+El PDF debe mantenerse tal cual se exporta de Canva para impresión, mientras que las imágenes webp sirven como vista de lectura, no sustituyen el PDF.
 
-## Importante sobre Discord
-
-`js/data/discord-config.js` contiene un webhook configurado en el proyecto original. En una página pública ese webhook es visible para cualquier visitante; puede ser utilizado por terceros o revocado por Discord. Para un uso público seguro, se recomienda un intermediario servidor/función segura que guarde el webhook como secreto. No se cambió la configuración de envíos de la versión que ya te funcionaba.
-
-## Audio y permisos
-
-Los sonidos actuales vienen de Wikimedia Commons y requieren Internet. Los navegadores móviles pueden bloquear la reproducción hasta la primera interacción con el juego. Ninguna página puede garantizar el volumen físico en una sala: depende del sistema operativo, bocinas y proyector. Los créditos de audio están en `docs/FUENTES_DE_AUDIO.md`.
-
-## Actualizar el informe después
-
-Edita el informe en Canva, descarga el PDF y sustituye `assets/docs/noches-en-residencia.pdf`. Para actualizar también las páginas del libro 3D, vuelve a exportar imágenes por página y reemplaza los archivos `pagina-XX.webp` manteniendo el orden de `js/data/book-pages.js`.
-
-
-### Navegación del informe — giro suave de una hoja
-El informe muestra una sola página a la vez en PC, Android y iPhone. Al avanzar o retroceder, la hoja se inclina ligeramente con perspectiva y sombra, sin dar una vuelta de 180 grados. Se mantienen las 18 páginas y el PDF original.
+**Privacidad:** el webhook de Discord de la versión anterior permanece en código del navegador y por eso puede quedar expuesto en GitHub público. Para compartir la página ampliamente, es recomendable usar un intermediario seguro y rotar la URL.

@@ -316,3 +316,60 @@
 @media(prefers-reduced-motion:reduce){.single-page-turn.animate .single-page-paper,.single-page-turn.animate::after{animation:none!important}}
 /* Evita un salto de tamaño al abrir la portada en computadora. */
 @media(min-width:800px){.book-cover-stand{width:min(100%,510px)}}
+
+
+/* === Brochure A4: seis paneles verticales, sin distorsión === */
+.book-gallery{max-width:760px}
+.book-cover-stand{width:min(100%,370px)!important}
+.book-viewer{max-width:590px;grid-template-columns:54px minmax(0,1fr) 54px;gap:10px}
+.viewer-window{min-width:0;background:#101a31}
+.viewer-track{display:flex!important;align-items:center;justify-content:center;padding:13px!important}
+.viewer-track>.image-page{width:min(100%,405px);max-width:405px;height:auto;aspect-ratio:842.25 / 1786.5;margin-inline:auto;border-radius:5px;flex:0 1 405px}
+.image-page img{width:100%;height:100%;object-fit:contain;background:#fff}
+.single-page-turn{inset:13px;display:flex;justify-content:center;align-items:stretch}
+.single-page-paper{left:50%;right:auto;width:min(100%,405px);transform:translateX(-50%);border-radius:5px}
+.single-page-paper img{object-fit:contain}
+/* Animación hoja suave existente: el desplazamiento va en el elemento, no su contenedor */
+.single-page-turn.forward .single-page-paper,
+.single-page-turn.backward .single-page-paper{transform-origin:center center}
+@keyframes brochureLeafForward{
+  0%{transform:translateX(-50%) rotateY(0);clip-path:inset(0 0 0 0)}
+  25%{transform:translateX(-50%) rotateY(-4deg);clip-path:inset(0 10% 0 0)}
+  70%{transform:translateX(-50%) rotateY(-9deg);clip-path:inset(0 59% 0 0)}
+  100%{transform:translateX(-50%) rotateY(-10deg);clip-path:inset(0 100% 0 0)}
+}
+@keyframes brochureLeafBackward{
+  0%{transform:translateX(-50%) rotateY(0);clip-path:inset(0 0 0 0)}
+  25%{transform:translateX(-50%) rotateY(4deg);clip-path:inset(0 0 0 10%)}
+  70%{transform:translateX(-50%) rotateY(9deg);clip-path:inset(0 0 0 59%)}
+  100%{transform:translateX(-50%) rotateY(10deg);clip-path:inset(0 0 0 100%)}
+}
+.single-page-turn.forward.animate .single-page-paper{animation:brochureLeafForward .64s cubic-bezier(.38,0,.22,1) both}
+.single-page-turn.backward.animate .single-page-paper{animation:brochureLeafBackward .64s cubic-bezier(.38,0,.22,1) both}
+.brochure-unfolded{max-width:1020px;margin:25px auto 38px;color:#e6e9ff}
+.brochure-unfolded summary{border:1px solid rgba(175,187,224,.25);border-radius:16px;background:#ffffff12;padding:16px 20px;font-weight:800;cursor:pointer;list-style-position:inside;text-align:center;outline-offset:3px}
+.brochure-unfolded[open] summary{border-radius:16px 16px 7px 7px}
+.brochure-unfolded-note{text-align:center;color:#b7c7e0;font-size:.86rem;line-height:1.6;margin:16px 10px 20px}
+.brochure-face-list{display:grid;gap:24px;margin-top:14px}
+.brochure-face-list figure{margin:0;background:#ffffff0b;border:1px solid #ffffff17;border-radius:14px;padding:15px;overflow:hidden}
+.brochure-face-list figcaption{margin:0 0 14px;font-weight:750;color:#e6e9ff}
+.brochure-face-list a{display:block;overflow:hidden;border-radius:8px;line-height:0}
+.brochure-face-list img{display:block;width:100%;height:auto;object-fit:contain;background:#fff;transition:filter .15s}
+.brochure-face-list a:hover img{filter:brightness(1.04)}
+@media(max-width:799px){
+  .book-viewer{max-width:min(100%,470px);grid-template-columns:1fr 1fr;gap:8px}
+  .viewer-window{grid-column:1/-1;grid-row:1}
+  .viewer-track{padding:9px!important}
+  .viewer-track>.image-page{width:min(100%,400px)}
+  .single-page-turn{inset:9px}
+  .single-page-paper{width:min(100%,400px)}
+  .brochure-face-list figure{padding:9px}
+  .brochure-unfolded summary{font-size:.84rem;padding:13px 10px}
+}
+@media print{
+  @page{size:A4 landscape;margin:0}
+  .book-print-gallery{display:block!important}
+  .print-image-page{width:297mm;height:210mm;break-after:page}
+  .print-image-page img{width:100%;height:100%;object-fit:fill}
+  .brochure-unfolded{display:none!important}
+}

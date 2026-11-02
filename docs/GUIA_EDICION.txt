@@ -1,11 +1,4 @@
-LIBRO DIGITAL · NOCHES EN RESIDENCIA
-
-- PDF descargable original: assets/docs/noches-en-residencia.pdf
-- Páginas ilustradas: assets/img/book/pagina-01.webp ... pagina-18.webp
-- Orden del libro: js/data/book-pages.js
-- Lógica de giro 3D: js/book.js
-- Diseño móvil: css/book.css, css/responsive.css
-- Sonido fuerte sin controles: js/audio.js (máximo del navegador)
-- Envío de resultados: js/discord.js, js/data/discord-config.js
-
-Para cambiar contenidos, actualiza tanto el PDF como las imágenes de cada página.
+Brochure Semana Ambiental: archivos originales de impresión en assets/docs/Brochure_Semana_Ambiental_2026.pdf.
+Vista web panel por panel: js/data/book-pages.js, assets/img/brochure/*.webp.
+Vista desplegada: las dos imágenes cara-exterior.webp y cara-interior.webp.
+Para reexportar desde Canva, reemplazar tanto el PDF como las imágenes correspondientes.

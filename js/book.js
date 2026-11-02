@@ -1,4 +1,4 @@
-/* Libro por imágenes en modo hoja por hoja.
+/* Tríptico por paneles con animación suave de hoja por hoja.
    La portada se abre aparte y luego se muestra una página por vez,
    con una transición suave para evitar el giro forzado de dos hojas. */
 let bookPosition = 1; // la portada ocupa el índice 0
@@ -26,12 +26,12 @@ function setPage(page) {
 function setProgress() {
   const first = interiorPage(bookPosition);
   $('bookChapter').textContent = first ? first.name.toUpperCase() : 'LIBRO';
-  $('bookCount').textContent = `Página ${bookPosition + 1} de ${bookPages.length}`;
+  $('bookCount').textContent = `Panel ${bookPosition + 1} de ${bookPages.length}`;
   $('bookPrev').disabled = false;
   $('bookNext').disabled = bookPosition >= totalInteriorPages();
   $('bookProgress').innerHTML = Array.from({ length: totalInteriorPages() }, (_, i) => {
     const n = i + 1;
-    return `<b class="${n === bookPosition ? 'current' : ''}" title="Página ${n + 1}"></b>`;
+    return `<b class="${n === bookPosition ? 'current' : ''}" title="Panel ${n + 1}"></b>`;
   }).join('');
 }
 function renderBook() {
@@ -41,8 +41,8 @@ function renderBook() {
     $('closedBookImage').alt = cover.name || 'Portada del libro';
   }
   if (!bookOpened) {
-    $('bookChapter').textContent = 'PORTADA';
-    $('bookCount').textContent = 'Toca para abrir';
+    $('bookChapter').textContent = 'PORTADA DEL TRÍPTICO';
+    $('bookCount').textContent = '6 paneles · Toca para abrir';
     return;
   }
   bookPosition = clampBookPosition(bookPosition);
@@ -187,5 +187,5 @@ window.addEventListener('resize', () => {
 });
 $('pamBtn').addEventListener('click', resetBook);
 $('endPamBtn').addEventListener('click', resetBook);
-$('bookPrintGallery').innerHTML = bookPages.map(page => `<figure class="print-image-page"><img src="${page.src}" alt="${page.name}"></figure>`).join('');
+$('bookPrintGallery').innerHTML = ['cara-exterior', 'cara-interior'].map((side, i) => `<figure class="print-image-page"><img src="assets/img/brochure/${side}.webp" alt="Cara ${i === 0 ? 'exterior' : 'interior'} del tríptico"></figure>`).join('');
 renderBook();
